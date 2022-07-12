@@ -21,18 +21,11 @@ Destroy the scrollbar
 scrollbar:destroy()
 ```
 
-| Syntax      | Description |
+| Property     | Value |
 | ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
-
-```
-{
-  "scrollOffset": number value,
-  "bgBarColor": table,
-  "smoothScroll": boolen
-}
-```
+| scrollOffset      | number       |
+| bgBarColor   | table        |
+| smoothScroll   | boolen        |
 
 Change a property of scrollbar
 ```lua
