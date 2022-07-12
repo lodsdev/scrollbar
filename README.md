@@ -21,6 +21,11 @@ Destroy the scrollbar
 scrollbar:destroy()
 ```
 
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
+
 ```
 {
   "scrollOffset": number value,
