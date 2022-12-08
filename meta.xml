@@ -1,0 +1,4 @@
+<meta>
+    <script src='scrollbar.lua' type='client' />
+    <script src='c.lua' type='client' />
+</meta>
