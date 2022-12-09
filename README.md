@@ -21,11 +21,11 @@ Destroy the scrollbar
 scrollbar:destroy()
 ```
 
-| Property     | Value |
-| ----------- | ----------- |
-| scrollOffset      | number       |
-| bgBarColor   | table        |
-| smoothScroll   | boolen        |
+| Property     | Value       |
+| -----------  | ----------- |
+| scrollOffset | number      |
+| bgBarColor   | table       |
+| smoothScroll | boolen      |
 
 Change a property of scrollbar
 ```lua
