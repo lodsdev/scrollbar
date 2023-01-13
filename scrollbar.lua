@@ -5,7 +5,6 @@ setmetatable(private, { __mode = 'k' })
 
 local screenWidth, screenHeight = guiGetScreenSize()
 
-local scrollHover
 local DEBUG_SCROLLBAR = 'disabled'
 
 local function debugScrollbar(...)
@@ -105,12 +104,6 @@ function Scrollbar:new(data, postGUI)
 end
 
 function Scrollbar:render()
-    scrollHover = nil
-
-    if (isMouseInPosition(self.x, self.y, self.width, self.height)) then
-        scrollHover = self
-    end
-
     if (private[self].smooth and private[self].progress == 'in_progress') then
         local progress = (getTickCount() - private[self].tickClick) / private[self].duration
         local position = interpolateBetween(
@@ -176,12 +169,12 @@ end
 
 function Scrollbar:click(button, state, abx, aby)
     if (button == 'left' and state == 'down') then
-        if (scrollHover == self) then
+        if (abx >= self.x and abx <= self.x + self.width and aby >= self.y and aby <= self.y + self.height) then
             if (abx >= private[self].posBarX and abx <= (private[self].posBarX + private[self].widthBar) and aby >= private[self].posBarY and aby <= (private[self].posBarY + private[self].heightBar)) then
                 private[self].scrolling = true
                 private[self].mouseData.clickMoveBar.x = abx - private[self].posBarX
                 private[self].mouseData.clickMoveBar.y = aby - private[self].posBarY
-                return
+                return true
             end
 
             local valueOffset = 0
@@ -216,13 +209,17 @@ function Scrollbar:click(button, state, abx, aby)
             if (private[self].scrolling_event) then
                 private[self].scrolling_event(self:getScrollOffset())
             end
+            return true
         end
     elseif (button == 'left' and state == 'up') then
         private[self].scrolling = false
         if (private[self].scrollEnd_event) then
             private[self].scrollEnd_event(self:getScrollOffset())
         end
+        return true
     end
+
+    return false
 end
 
 function Scrollbar:setScrollOffset(value)
