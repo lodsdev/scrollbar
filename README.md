@@ -15,10 +15,22 @@ local myScrollbar = Scrollbar:new({ x = 200, y = 200, width = 20, height = 200, 
 ```
 Now, for use the methods of the scrollbar, you need to use the variable `myScrollbar`
 
+# Rendering
+
+Render the scrollbar
+```lua
+myScrollbar:render()
+```
+
+# Change properties
 Change a property of scrollbar. Consulte the list of properties below to see what you can change and how to do it.
+
 ```lua
 myScrollbar:setProperty(property, value)
 ```
+
+
+# Methods and events
 
 Set a new offset
 ```lua
