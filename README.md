@@ -8,7 +8,7 @@ This is a simple library for create scrollbars which allows easy creation of som
 You need download the file ```scrollbar.lua``` and put it in your project, but don't forget to load it in the meta.xml. Example of uses in the file ```example.lua```
 
 # Instantiating
-Create a new scrollbar using the methdo `new`, the method takes a table with the following properties: x, y, width, height, maxValue, minValue, orientation. The orientation can be "vertical" or "horizontal". 
+Create a new scrollbar using the methdo `new`, the method takes a table with the following properties: x, y, width, height, maxValue, minValue, orientation. The orientation can be "vertical" or "horizontal". And the optional arguments are (bgRadius, barRadius)
 
 ```lua
 local myScrollbar = Scrollbar:new({ x = 200, y = 200, width = 20, height = 200, maxValue = 100, minValue = 0, orientation = "vertical" })
