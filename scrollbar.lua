@@ -47,6 +47,8 @@ function Scrollbar:new(data, postGUI)
     assert(type(data.height) == 'number', 'Height must be a number, got ' .. type(data.height))
     assert(type(data.minValue) == 'number', 'Min value must be a number, got ' .. type(data.minValue))
     assert(type(data.maxValue) == 'number', 'Max value must be a number, got ' .. type(data.maxValue))
+    assert(type(data.bgRadius) == 'number', 'Background radius must be a number, got ' .. type(data.bgRadius))
+    assert(type(data.barRadius) == 'number', 'Bar radius must be a number, got ' .. type(data.barRadius))
     assert(type(postGUI) == 'boolean', 'Post GUI must be a boolean, got ' .. type(postGUI))
     
     local instance = {}
