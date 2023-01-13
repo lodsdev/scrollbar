@@ -5,7 +5,7 @@ DX library that allows you to easily create scrollbar.
 This is a simple library for create scrollbars which allows easy creation of some resources
 
 # How to use
-You need download the file ```scrollbar.lua``` and put it in your project, but don't forget to load it in the meta.xml
+You need download the file ```scrollbar.lua``` and put it in your project, but don't forget to load it in the meta.xml. Example of uses in the file ```example.lua```
 
 # Instantiating
 Create a new scrollbar using the methdo `new`, the method takes a table with the following properties: x, y, width, height, maxValue, minValue, orientation. The orientation can be "vertical" or "horizontal". 
@@ -15,7 +15,7 @@ local myScrollbar = Scrollbar:new({ x = 200, y = 200, width = 20, height = 200, 
 ```
 Now, for use the methods of the scrollbar, you need to use the variable `myScrollbar`
 
-Change a property of scrollbar
+Change a property of scrollbar. Consulte the list of properties below to see what you can change and how to do it.
 ```lua
 myScrollbar:setProperty(property, value)
 ```
