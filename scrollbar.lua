@@ -26,7 +26,7 @@ local function isMouseInPosition(x, y, width, height)
 end
 
 local function warn(message)
-    return error(message, 2)
+    return error(message)
 end
 
 local function clamp(number, min, max)
@@ -81,11 +81,10 @@ function Scrollbar:new(data, postGUI)
     private[instance].posBarX = instance.x
     private[instance].posBarY = instance.y
     private[instance].tickClick = false
-    private[instance].smoothData = {
-        active = false,
-        positionI = 0,
-        positionF = 0,
-    }
+    private[instance].progress = 'stabilized'
+    private[instance].duration = 250
+    private[instance].positionI = nil
+    private[instance].positionF = nil
     private[instance].mouseData = {
         clickBar = { x = 0, y = 0 },
         clickMoveBar = { x = 0, y = 0 }
@@ -95,7 +94,7 @@ function Scrollbar:new(data, postGUI)
     private[instance].barColorHover = {0, 0, 0} -- color bar when hover
     private[instance].bgBarColor = {0, 0, 0} -- color background bar
     private[instance].radius = 0
-    private[instance].smoothScroll = false
+    private[instance].smooth = false
     private[instance].scrolling = false
     private[instance].scrollOffset = 0
     -- Events methods
@@ -110,6 +109,23 @@ function Scrollbar:render()
 
     if (isMouseInPosition(self.x, self.y, self.width, self.height)) then
         scrollHover = self
+    end
+
+    if (private[self].smooth and private[self].progress == 'in_progress') then
+        local progress = (getTickCount() - private[self].tickClick) / private[self].duration
+        local position = interpolateBetween(
+            private[self].positionI, 0, 0,
+            private[self].positionF, 0, 0,
+            progress, 'InOutQuad'
+        )
+        self:setBarPosition(self.orientation, position)
+
+        if (progress >= 1) then
+            private[self].progress = 'stabilized'
+            private[self].tickClick = nil
+            private[self].positionI = nil
+            private[self].positionF = nil
+        end
     end
 
     dxDrawRectangle(
@@ -172,18 +188,26 @@ function Scrollbar:click(button, state, abx, aby)
             private[self].mouseData.clickBar.x = abx - self.x
             private[self].mouseData.clickBar.y = aby - self.y
 
-            if (private[self].smoothData.active) then
+            if (private[self].smooth) then
                 private[self].tickClick = getTickCount()
+                private[self].progress = 'in_progress'
 
                 if (self.orientation == 'vertical') then
                     local newPosBar = math.ceil(aby - (private[self].heightBar / 2), self.y, self.y + (self.height - private[self].heightBar))
                     valueOffset = math.ceil(clamp(((newPosBar - self.y) / (self.height - private[self].heightBar)) * 100, 0, 100))
-                    private[self].smoothData.positionI, private[self].smoothData.positionF = private[self].posBarY, newPosBar 
+                    private[self].positionI, private[self].positionF = private[self].posBarY, newPosBar 
+                elseif (self.orientation == 'horizontal') then
+                    local newPosBar = math.ceil(abx - (private[self].widthBar / 2), self.x, self.x + (self.width - private[self].widthBar))
+                    valueOffset = math.ceil(clamp(((newPosBar - self.x) / (self.width - private[self].widthBar)) * 100, 0, 100))
+                    private[self].positionI, private[self].positionF = private[self].posBarX, newPosBar 
                 end
             else
                 if (self.orientation == 'vertical') then
                     self:setBarPosition('vertical', clamp(aby - (private[self].heightBar / 2), self.y, self.y + (self.height - private[self].heightBar)))
                     valueOffset = math.ceil(clamp(((private[self].posBarY - self.y) / (self.height - private[self].heightBar)) * 100, 0, 100))
+                elseif (self.orientation == 'horizontal') then
+                    self:setBarPosition('horizontal', clamp(abx - (private[self].widthBar / 2), self.x, self.x + (self.width - private[self].widthBar)))
+                    valueOffset = math.ceil(clamp(((private[self].posBarX - self.x) / (self.width - private[self].widthBar)) * 100, 0, 100))
                 end
             end
 
@@ -261,13 +285,13 @@ function Scrollbar:setBarPosition(orientation, position)
 end
 
 function Scrollbar:setProperty(property, value)
-    if (not property or not value) then
+    if (not property or not (value ~= nil)) then
         local output = (not property and 'Define a property to set property') or (not value and 'Define a value to set property')
         warn(output)
         return false
     end
 
-    if (not private[self][property]) then
+    if (private[self][property] == nil) then
         warn('Invalid property')
         return false
     end

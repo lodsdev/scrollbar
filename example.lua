@@ -24,9 +24,10 @@ local items = {
     'Text20',
 }
 
-local scroll = Scrollbar:new({ x = 500, y = 500, width = 10, height = 300, maxValue = #items, minValue = visibleItems, orientation = 'vertical' }, false)
+local scroll = Scrollbar:new({ x = 500, y = 500, width = 300, height = 10, maxValue = #items, minValue = visibleItems, orientation = 'horizontal' }, false)
 scroll:setProperty('barColor', {255, 0, 0})
 scroll:setProperty('barColorHover', {255, 175, 0})
+scroll:setProperty('smooth', true)
 
 scroll:onScroll(function(value)
     scrollOffset = value
@@ -34,7 +35,6 @@ end)
 
 local function render()
     scroll:render()
-
     for i = 1 + scrollOffset, math.min(#items, visibleItems + scrollOffset) do
         dxDrawText(items[i], 400, 500 + (i - 1 - scrollOffset) * 40, 300, 140 + (i - 1 - scrollOffset) * 40, tocolor(255, 255, 255, 255), 1, 'default', 'left', 'top', false, false, false, false, false)
     end
