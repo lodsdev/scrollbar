@@ -1,48 +1,44 @@
 # Library scrollbar
 DX library that allows you to easily create scrollbar.
 
-# License
-#### This is library free, you can freely use and edit.
-
 # About
 This is a simple library for create scrollbars which allows easy creation of some resources
 
 # How to use
 You need download the file ```scrollbar.lua``` and put it in your project, but don't forget to load it in the meta.xml
 
-# Functions
-Create a new scrollbar
-```lua
-scrollbar = createScrollBar(x, y, width, height, radius, minValue, maxValue, postGUI)
-```
+# Instantiating
+Create a new scrollbar using the methdo `new`, the method takes a table with the following properties: x, y, width, height, maxValue, minValue, orientation. The orientation can be "vertical" or "horizontal". 
 
-Destroy the scrollbar
 ```lua
-scrollbar:destroy()
+local myScrollbar = Scrollbar:new({ x = 200, y = 200, width = 20, height = 200, maxValue = 100, minValue = 0, orientation = "vertical" })
 ```
-
-| Property     | Value       |
-| -----------  | ----------- |
-| scrollOffset | number      |
-| bgBarColor   | table       |
-| smoothScroll | boolen      |
+Now, for use the methods of the scrollbar, you need to use the variable `myScrollbar`
 
 Change a property of scrollbar
 ```lua
-scrollbar:setProperty(property, value)
+myScrollbar:setProperty(property, value)
 ```
 
 Set a new offset
 ```lua
-scrollbar:setScrollOffset(value)
+myScrollbar:setScrollOffset(value)
 ```
 
 Get the current offset value
 ```lua
-scrollbar:onScroll()
+myScrollbar:onScroll()
 ```
 
 Get the output the scroll offset
 ```lua
-scrollbar:onScrollEnd()
+myScrollbar:onScrollEnd()
 ```
+
+Get offset value
+```lua
+myScrollbar:getScrollOffset()
+```
+
+# License
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/lodsdev/scrollbar/LICENSE.txt) file for details

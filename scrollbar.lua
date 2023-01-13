@@ -5,14 +5,6 @@ setmetatable(private, { __mode = 'k' })
 
 local screenWidth, screenHeight = guiGetScreenSize()
 
-local DEBUG_SCROLLBAR = 'disabled'
-
-local function debugScrollbar(...)
-    if (DEBUG_SCROLLBAR == 'enabled') then
-        outputDebugString(...)
-    end
-end
-
 local function rgba(r, g, b, a)
     return tocolor(r, g, b, a * 255)
 end
@@ -62,20 +54,41 @@ function Scrollbar:new(data, postGUI)
     
     instance.x = data.x
     instance.y = data.y
-    instance.width = data.width or 1
-    instance.height = data.height or 1
+    instance.width = data.width
+    instance.height = data.height
     instance.minValue = data.minValue
     instance.maxValue = data.maxValue
-    instance.orientation = data.orientation
+    instance.orientation = data.orientation or 'vertical'
+    instance.bgRadius = data.bgRadius or 0
+    instance.barRadius = data.barRadius or 0
     instance.postGUI = postGUI or false
     
     private[instance] = {}
     
     local sizeBar = (instance.orientation == 'vertical') and instance.height or instance.width
     local bar = (sizeBar / instance.maxValue) * instance.minValue
+
+    
     private[instance].widthBar = (bar > 0) and bar or (instance.width / 2) -- width bar
     private[instance].heightBar = (bar > 0) and bar or (instance.height / 2) -- height bar
     
+    private[instance].bgBarElement = svgCreate(instance.width, instance.height, string.format([[
+        <svg width='%s' height='%s' xmlns="http://www.w3.org/2000/svg">
+            <rect rx='%s' width='%s' height='%s' fill='#FFFFFF' />
+        </svg>
+    ]], instance.width, instance.height, instance.bgRadius, instance.width, instance.height))
+
+    local width = (instance.orientation == 'horizontal') and private[instance].widthBar or instance.width
+    local height = (instance.orientation == 'vertical') and private[instance].heightBar or instance.height
+    private[instance].barElement = svgCreate(width, height, string.format([[
+        <svg width='%s' height='%s' xmlns="http://www.w3.org/2000/svg">
+            <rect rx='%s' width='%s' height='%s' fill='#FFFFFF' />
+        </svg>
+    ]], width, height, instance.barRadius, width, height))
+
+    dxSetTextureEdge(private[instance].bgBarElement, 'wrap')
+    dxSetTextureEdge(private[instance].barElement, 'wrap')
+
     private[instance].positionClick = {}
     private[instance].posBarX = instance.x
     private[instance].posBarY = instance.y
@@ -121,28 +134,36 @@ function Scrollbar:render()
         end
     end
 
-    dxDrawRectangle(
+    dxSetBlendMode('add')
+    dxDrawImage(
         self.x, 
         self.y, 
         self.width, 
         self.height, 
-        rgba(private[self].bgBarColor[1], private[self].bgBarColor[2], private[self].bgBarColor[3], private[self].alpha)
+        private[self].bgBarElement, 
+        0, 0, 0, 
+        rgba(private[self].bgBarColor[1], private[self].bgBarColor[2], private[self].bgBarColor[3], private[self].alpha), 
+        self.postGUI
     )
 
     local barWidth = (self.orientation == 'horizontal') and private[self].widthBar or self.width
     local barHeight = (self.orientation == 'vertical') and private[self].heightBar or self.height
 
-    dxDrawRectangle(
+    dxDrawImage(
         private[self].posBarX,
         private[self].posBarY,
         barWidth,
         barHeight,
+        private[self].barElement,
+        0, 0, 0,
         (
             (isMouseInPosition(private[self].posBarX, private[self].posBarY, barWidth, barHeight) or private[self].scrolling)
             and rgba(private[self].barColorHover[1], private[self].barColorHover[2], private[self].barColorHover[3], private[self].alpha)
             or rgba(private[self].barColor[1], private[self].barColor[2], private[self].barColor[3], private[self].alpha)
-        )
+        ),
+        self.postGUI
     )
+    dxSetBlendMode('blend')
 
     if (private[self].scrolling) then
         local cursorX, cursorY = getCursorPosition()
@@ -186,11 +207,11 @@ function Scrollbar:click(button, state, abx, aby)
                 private[self].progress = 'in_progress'
 
                 if (self.orientation == 'vertical') then
-                    local newPosBar = math.ceil(aby - (private[self].heightBar / 2), self.y, self.y + (self.height - private[self].heightBar))
+                    local newPosBar = clamp(aby - (private[self].heightBar / 2), self.y, self.y + (self.height - private[self].heightBar))
                     valueOffset = math.ceil(clamp(((newPosBar - self.y) / (self.height - private[self].heightBar)) * 100, 0, 100))
                     private[self].positionI, private[self].positionF = private[self].posBarY, newPosBar 
                 elseif (self.orientation == 'horizontal') then
-                    local newPosBar = math.ceil(abx - (private[self].widthBar / 2), self.x, self.x + (self.width - private[self].widthBar))
+                    local newPosBar = clamp(abx - (private[self].widthBar / 2), self.x, self.x + (self.width - private[self].widthBar))
                     valueOffset = math.ceil(clamp(((newPosBar - self.x) / (self.width - private[self].widthBar)) * 100, 0, 100))
                     private[self].positionI, private[self].positionF = private[self].posBarX, newPosBar 
                 end
