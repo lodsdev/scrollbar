@@ -14,18 +14,18 @@ local items = {
     'Text10',
 }
 
-local scroll = Scrollbar:new({ x = 500, y = 500, width = 10, height = 200, maxValue = #items, minValue = visibleItems, orientation = 'vertical', bgRadius = 5, barRadius = 5 }, false)
-scroll:setProperty('barColor', {255, 0, 0})
-scroll:setProperty('barColorHover', {255, 175, 0})
-scroll:setProperty('smooth', true)
+local scrollVertical = Scrollbar:new({ x = 500, y = 500, width = 10, height = 200, maxValue = #items, minValue = visibleItems, orientation = 'vertical', bgRadius = 5, barRadius = 5 }, false)
+scrollVertical:setProperty('barColor', {255, 0, 0})
+scrollVertical:setProperty('barColorHover', {255, 175, 0})
+scrollVertical:setProperty('smooth', false)
 
-scroll:onScroll(function(value)
+scrollVertical:onScroll(function(value)
     scrollOffset = value
 end)
 
 local function render()
-    if (scroll) then
-        scroll:render()
+    if (scrollVertical) then
+        scrollVertical:render()
     end
 
     for i = 1 + scrollOffset, math.min(#items, visibleItems + scrollOffset) do
@@ -35,14 +35,7 @@ end
 addEventHandler('onClientRender', root, render)
 
 local function click(button, state, abx, aby)
-    scroll:click(button, state, abx, aby)
-
-    if (button == 'mouse_wheel_down') then
-        scrollOffset = scrollOffset + 1
-        scroll:setScrollOffset(scrollOffset)
-    elseif (button == 'mouse_wheel_up') then
-        scrollOffset = scrollOffset - 1
-        scroll:setScrollOffset(scrollOffset)
-    end
+    scrollVertical:click(button, state, abx, aby)
+    scrollHorizontal:click(button, state, abx, aby)
 end
 addEventHandler('onClientClick', root, click)
