@@ -37,15 +37,17 @@ Set a new offset
 myScrollbar:setScrollOffset(value)
 ```
 
-Get the current offset value
+Get the current offset value 
 ```lua
-myScrollbar:onScroll()
+myScrollbar:onScroll(callback)
 ```
+The callback function takes the offset value as a parameter
 
 Get the output the scroll offset
 ```lua
-myScrollbar:onScrollEnd()
+myScrollbar:onScrollEnd(callback)
 ```
+The callback function takes the offset value as a parameter
 
 Get offset value
 ```lua
