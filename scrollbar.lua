@@ -302,6 +302,15 @@ function Scrollbar:setBarPosition(orientation, position)
     return true
 end
 
+function Scrollbar:setAlpha(alpha)
+    if (not alpha) then
+        warn('Define a alpha to set alpha')
+        return false
+    end
+    private[self].alpha = alpha
+    return true
+end
+
 function Scrollbar:setProperty(property, value)
     if (not property or not (value ~= nil)) then
         local output = (not property and 'Define a property to set property') or (not value and 'Define a value to set property')
