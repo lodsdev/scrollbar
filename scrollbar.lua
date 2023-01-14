@@ -136,7 +136,6 @@ function Scrollbar:render()
         end
     end
 
-    dxSetBlendMode('add')
     dxDrawImage(
         self.x, 
         self.y, 
@@ -165,7 +164,6 @@ function Scrollbar:render()
         ),
         self.postGUI
     )
-    dxSetBlendMode('blend')
 
     if (private[self].scrolling) then
         local cursorX, cursorY = getCursorPosition()
@@ -174,11 +172,11 @@ function Scrollbar:render()
         local valueOffset = 0
         if (self.orientation == 'vertical') then
             local cy = (cursorY - private[self].mouseData.clickMoveBar.y)
-            private[self].posBarY = clamp(cy, self.y, self.y + (self.height - private[self].heightBar))
+            self:setBarPosition('vertical', clamp(cy, self.y, self.y + (self.height - private[self].heightBar)))
             valueOffset = math.ceil(clamp(((private[self].posBarY - self.y) / (self.height - private[self].heightBar)) * 100, 0, 100))
         else
             local cx = (cursorX - private[self].mouseData.clickMoveBar.x)
-            private[self].posBarX = clamp(cx, self.x, self.x + (self.width - private[self].widthBar))
+            self:setBarPosition('horizontal', clamp(cx, self.x, self.x + (self.width - private[self].widthBar)))
             valueOffset = math.ceil(clamp(((private[self].posBarX - self.x) / (self.width - private[self].widthBar)) * 100, 0, 100))
         end
         
