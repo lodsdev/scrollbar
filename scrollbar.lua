@@ -107,7 +107,6 @@ function Scrollbar:new(data, postGUI)
     private[instance].barColor = {255, 255, 255} -- color bar
     private[instance].barColorHover = {0, 0, 0} -- color bar when hover
     private[instance].bgBarColor = {0, 0, 0} -- color background bar
-    private[instance].radius = 0
     private[instance].smooth = false
     private[instance].scrolling = false
     private[instance].scrollOffset = 0
