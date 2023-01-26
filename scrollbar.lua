@@ -179,7 +179,7 @@ function Scrollbar:render()
             valueOffset = math.ceil(clamp(((private[self].posBarX - self.x) / (self.width - private[self].widthBar)) * 100, 0, 100))
         end
         
-        private[self].scrollOffset = math.ceil((value / 100) * (self.maxValue - self.minValue))
+        private[self].scrollOffset = math.ceil((valueOffset / 100) * (self.maxValue - self.minValue))
 
         if (private[self].scrolling_event) then
             private[self].scrolling_event(self:getScrollOffset())
@@ -247,7 +247,7 @@ function Scrollbar:setScrollOffset(value)
         warn('Define a value to set scroll offset')
         return false
     end
-    
+
     local newValue = math.ceil((value * 100) / (self.maxValue - self.minValue))
     private[self].scrollOffset = newValue
     
