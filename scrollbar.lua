@@ -224,7 +224,7 @@ function Scrollbar:click(button, state, abx, aby)
                 end
             end
 
-            private[self].scrollOffset = math.ceil((value / 100) * (self.maxValue - self.minValue))
+            private[self].scrollOffset = math.ceil((valueOffset / 100) * (self.maxValue - self.minValue))
             
             if (private[self].scrolling_event) then
                 private[self].scrolling_event(self:getScrollOffset())
