@@ -247,7 +247,15 @@ function Scrollbar:setScrollOffset(value)
         warn('Define a value to set scroll offset')
         return false
     end
-    private[self].scrollOffset = math.ceil((value * 100) / (self.maxValue - self.minValue))
+    
+    local newValue = math.ceil((value * 100) / (self.maxValue - self.minValue))
+    private[self].scrollOffset = newValue
+    
+    if (self.orientation == 'vertical') then
+        self:setBarPosition('vertical', self.y + ((self.height - private[self].heightBar) / 100) * newValue)
+    elseif (self.orientation == 'horizontal') then
+        self:setBarPosition('horizontal', self.x + ((self.width - private[self].widthBar) / 100) * newValue)
+    end
     return true
 end
 
